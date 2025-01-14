@@ -15,21 +15,31 @@ public class DayNight : MonoBehaviour
 
     [SerializeField] Light2D globLight;
 
-    float timeScale = 1200;
+    float timeScale = 110.77f;
     float time;
-    int days;
 
     [SerializeField] TextMeshProUGUI text;
 
     private void Update()
     {
         time += Time.deltaTime * timeScale;
-        text.text = (time/3600f).ToString();
-        float v = dayNightCycle.Evaluate(time/3600);
+        text.text = (time / 3600f).ToString("F1");
+        float v = dayNightCycle.Evaluate(time / 3600);
         Color c = Color.Lerp(dayColor, nightColor, v);
         globLight.color = c;
-        if (time > secondsInDay) 
+        if (time > secondsInDay)
         {
+            NewDay();
+        }
+    }
+
+    public void SkipHour(int numberOfHours)
+    {
+        time += (3600f * numberOfHours);
+
+        if (time > secondsInDay)
+        {
+            time -= secondsInDay;
             NewDay();
         }
     }
@@ -37,6 +47,14 @@ public class DayNight : MonoBehaviour
     private void NewDay()
     {
         time = 0;
-        days++;
+        GameManager.Instance.days++;
+
+        if (GameManager.Instance.days > 7)
+        {
+            GameManager.Instance.days = 1;
+            GameManager.Instance.weeks++;
+        }
+
+        GameManager.Instance.NewDay();
     }
 }

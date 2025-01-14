@@ -1,0 +1,36 @@
+using System;
+using TMPro;
+using UnityEngine;
+
+public class OpenCloseButton : MonoBehaviour
+{
+    [SerializeField]
+    private TextMeshProUGUI btnTxt;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        btnTxt.text = "Open";
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public void OnButtonPress()
+    {
+        if (!GameManager.Instance.isCafeOpen)
+        {
+            GameManager.Instance.isCafeOpen = true;
+            btnTxt.text = "Close";
+            Debug.Log("Cafe is open");
+        }
+        else
+        {
+            GameManager.Instance.isCafeOpen = false;
+            btnTxt.text = "Open";
+            Debug.Log("Cafe is closed");
+        }
+    }
+}

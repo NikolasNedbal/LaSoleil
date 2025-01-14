@@ -13,54 +13,14 @@ MonoBehaviour:
   m_Name: Inventory
   m_EditorClassIdentifier: 
   slots:
-  - item: {fileID: 11400000, guid: 8381d097ed71529459e1a87e06af0743, type: 2}
+  - item: {fileID: 11400000, guid: 693c7641197ef8146856fa2a6c93581c, type: 2}
     count: 1
-  - item: {fileID: 11400000, guid: fe8e897723863f546ae7e74bd1b1e736, type: 2}
+  - item: {fileID: 11400000, guid: d4524a61b7f86ba47a471773387942a7, type: 2}
     count: 1
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
-  - item: {fileID: 0}
-    count: 0
+  - item: {fileID: 11400000, guid: 09ff487ab016f0044be5034a77cae96b, type: 2}
+    count: 1
+  - item: {fileID: 11400000, guid: b996a0fe4bbbb604cb8bd29e02b48ec1, type: 2}
+    count: 995
   - item: {fileID: 0}
     count: 0
   - item: {fileID: 0}

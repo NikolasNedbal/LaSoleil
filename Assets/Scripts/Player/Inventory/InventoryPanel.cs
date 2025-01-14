@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryPanel : MonoBehaviour
 {
     [SerializeField] ItemContainer inv;
-    [SerializeField] List<InventoryButton> buttons;
-    // Start is called before the first frame update
+    [SerializeField] public List<InventoryButton> buttons;
+
+    [SerializeField]
+    private bool isStorage = false;
+
     void Start()
     {
         Show();
@@ -16,7 +20,17 @@ public class InventoryPanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(inv == null)
+        {
+            if (isStorage)
+            {
+                inv = GameManager.Instance.storageContainer;
+            }
+            else
+            {
+                inv = GameManager.Instance.invContainer;
+            }
+        }
     }
 
     private void OnEnable()
@@ -31,18 +45,15 @@ public class InventoryPanel : MonoBehaviour
             buttons[i].SetIndex(i);
         }
     }
-    private void Show()
+
+    public void Show()
     {
-        for (int i = 0; i < inv.slots.Count; i++)
+        for (int i = 0; i < buttons.Count; i++)
         {
-            if (inv.slots[i].item == null)
-            {
-                buttons[i].ThrashIsntDoneWithYou();
-            }
-            else 
-            {
-                buttons[i].Set(inv.slots[i]);
-            }
+            // Reset and update button states
+            buttons[i].ThrashIsntDoneWithYou();
+            buttons[i].Set(inv.slots[i]);
         }
     }
 }
+

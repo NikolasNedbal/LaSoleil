@@ -18,20 +18,10 @@ public class P_Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
-
-    void Start()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         Move();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
@@ -39,34 +29,34 @@ public class P_Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             sprint = true;
-        } else
+        }
+        else
         {
             sprint = false;
         }
-        animator.SetFloat("Horizontal", horizontal);
-        animator.SetFloat("Vertical", vertical);
 
         isMoving = horizontal != 0 || vertical != 0;
         animator.SetBool("moving", isMoving);
 
-        if (horizontal != 0 || vertical != 0) 
+        if (isMoving)
         {
             lastMotionVector = new Vector2(horizontal, vertical).normalized;
-
-            animator.SetFloat("lastHorizontal", horizontal);
-            animator.SetFloat("lastVertical", vertical);
         }
+        animator.SetFloat("lastHorizontal", lastMotionVector.x);
+        animator.SetFloat("lastVertical", lastMotionVector.y);
+        animator.SetFloat("Horizontal", horizontal);
+        animator.SetFloat("Vertical", vertical);
     }
 
     private void Move()
     {
         if (sprint)
         {
-            rb.velocity = motionVector * (2 * speed);
+            rb.linearVelocity = motionVector * (2 * speed);
         }
         else
         {
-            rb.velocity = motionVector * speed;
+            rb.linearVelocity = motionVector * speed;
         }
     }
 }
