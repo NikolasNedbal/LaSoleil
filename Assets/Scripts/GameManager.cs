@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,30 +11,22 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Update()
-    {
-        /*if(dialogue == null)
-        {
-            dialogue = gameObject.GetComponent<DialogueController>();
-        }*/
-    }
-
     public int money;
 
     public List<Plant> plants;
 
     public List<CoffeeItem> menuItems = new List<CoffeeItem>();
 
-    //public DialogueController dialogue;
-
     public bool isCafeOpen;
 
     public GameObject player;
     public ItemContainer invContainer;
     public ItemContainer storageContainer;
+    public ItemContainer ferContainer;
 
     public InventoryPanel invPanel;
     public InventoryPanel storagePanel;
+    public InventoryPanel ferPanel;
 
     public Table[] tables;
     public Transform cashRegister;
@@ -46,13 +39,18 @@ public class GameManager : MonoBehaviour
     public int days;
     public int weeks;
 
-    public GameObject[] doorPoints; 
+    public int rent;
 
+    public GameObject[] doorPoints;
+
+    public TextMeshProUGUI interTxt;
+
+    public bool isFerInProcess;
     public void RemoveMoney(int value)
     {
         money -= value;
     }
-    public void NewDay()
+    public void GrowPlants()
     {
         foreach (Plant plant in plants)
         {

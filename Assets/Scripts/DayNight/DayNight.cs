@@ -11,15 +11,15 @@ public class DayNight : MonoBehaviour
 
     [SerializeField] Color nightColor;
     [SerializeField] Color dayColor = Color.white;
-    [SerializeField] AnimationCurve dayNightCycle;
 
     [SerializeField] Light2D globLight;
 
-    float timeScale = 110.77f;
-    float time;
 
     [SerializeField] TextMeshProUGUI text;
 
+    [SerializeField] AnimationCurve dayNightCycle;
+    float timeScale = 110.77f;
+    float time;
     private void Update()
     {
         time += Time.deltaTime * timeScale;
@@ -44,7 +44,7 @@ public class DayNight : MonoBehaviour
         }
     }
 
-    private void NewDay()
+    public void NewDay()
     {
         time = 0;
         GameManager.Instance.days++;
@@ -53,8 +53,21 @@ public class DayNight : MonoBehaviour
         {
             GameManager.Instance.days = 1;
             GameManager.Instance.weeks++;
+            Rent();
         }
 
-        GameManager.Instance.NewDay();
+        if (GameManager.Instance.isFerInProcess)
+        {
+            GameManager.Instance.gameObject.GetComponent<Fermentation>().FermentationProcess();
+        }
+
+        GameManager.Instance.GrowPlants();
+    }
+
+    public void Rent()
+    {
+        GameManager.Instance.rent = (150 * GameManager.Instance.weeks);
+        Debug.Log("RENT: " + GameManager.Instance.rent);
+        GameManager.Instance.money -= GameManager.Instance.rent;
     }
 }

@@ -17,3 +17,5 @@ MonoBehaviour:
   icon: {fileID: -7378167626449473793, guid: fd99e97e9eec2ab418352adc4ea258db, type: 3}
   price: 50
   track: {fileID: 8300000, guid: a69100ea579fef745889e54166faedd6, type: 3}
+  vinylPic: {fileID: -2288376404085616193, guid: 8ee5120fe028ebe4b9aab70fef4bad96, type: 3}
+  animBool: Pink

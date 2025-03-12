@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d94b0527b9114842a559ff1c8d08201, type: 3}
   m_Name: Latte
   m_EditorClassIdentifier: 
-  Name: Latte
+  Name: Coffee
   stackable: 0
   icon: {fileID: -7273428676380669355, guid: bc570d9f2204f9f40a1688935d39b707, type: 3}
+  price: 0
   sugarSpoons: 0
   milk: 0

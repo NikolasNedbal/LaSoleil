@@ -1,2 +1,22 @@
 fileFormatVersion: 2
 guid: bf7838db433accd46be5dfa913492512
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - a: {instanceID: 0}
+  - ct: {instanceID: 0}
+  - playerInventory: {instanceID: 0}
+  - pickUpBtn: {instanceID: 0}
+  - addSugarBtn: {instanceID: 0}
+  - addMilkBtn: {instanceID: 0}
+  - bgRect: {instanceID: 0}
+  - icon: {instanceID: 0}
+  - CoffeeBeans: {fileID: 11400000, guid: 64b918b09faddb441a84f4f71e0fc45b, type: 2}
+  - Sugar: {instanceID: 0}
+  - Milk: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

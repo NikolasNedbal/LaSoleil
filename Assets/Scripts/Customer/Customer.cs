@@ -197,7 +197,7 @@ public class Customer : MonoBehaviour
         {
             if (!HasRequiredItems(preferredItem))
             {
-                Debug.Log("Order cannot be fulfilled: Missing " + preferredItem.Name + " Sugar: " + preferredItem.sugarSpoons + " Milk: " + preferredItem.milk);
+                Debug.Log("Order cannot be finished");
                 return false;
             }
         }
@@ -207,7 +207,7 @@ public class Customer : MonoBehaviour
             RemoveItemFromInventory(preferredItem);
         }
 
-        Debug.Log("Order fulfilled successfully!");
+        Debug.Log("Order finished successfully!");
         return true;
     }
 

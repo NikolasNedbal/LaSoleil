@@ -6,6 +6,7 @@ public class OpenCloseButton : MonoBehaviour
 {
     [SerializeField]
     private TextMeshProUGUI btnTxt;
+    public Animator anim;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,6 +21,7 @@ public class OpenCloseButton : MonoBehaviour
 
     public void OnButtonPress()
     {
+        anim.SetTrigger("ButtonClick");
         if (!GameManager.Instance.isCafeOpen)
         {
             GameManager.Instance.isCafeOpen = true;

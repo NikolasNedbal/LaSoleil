@@ -13,7 +13,6 @@ public class CreationTimer : MonoBehaviour
     {
         slider = GetComponent<Slider>();
     }
-
     void Start()
     {
         
@@ -22,7 +21,6 @@ public class CreationTimer : MonoBehaviour
             slider.value = 0f;
         }
     }
-
     void Update()
     {
         if (slider != null && slider.value < slider.maxValue)

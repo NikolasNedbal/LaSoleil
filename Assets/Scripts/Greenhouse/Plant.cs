@@ -10,7 +10,7 @@ public class Plant : MonoBehaviour
 
     private void Start()
     {
-        plantPosition = tilemap.WorldToCell(transform.position);  // Convert world position to tilemap grid position
+        plantPosition = tilemap.WorldToCell(transform.position);
         UpdatePlantSprite();
     }
 

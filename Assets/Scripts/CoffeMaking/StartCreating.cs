@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +28,13 @@ public class StartCreating : MonoBehaviour
     public Sprite icon;
     private bool isCreating = false;
 
+    [SerializeField]
+    private Item CoffeeBeans;
+    [SerializeField]
+    private Item Sugar;
+    [SerializeField]
+    private Item Milk;
+
     void Start()
     {
         pickUpBtn.enabled = false;
@@ -40,8 +47,9 @@ public class StartCreating : MonoBehaviour
         {
             EnableBtn();
         }
-        if (playerActive && Input.GetKeyDown(KeyCode.F))
+        if (playerActive && Input.GetKeyDown(KeyCode.F) && CheckItemInInv(CoffeeBeans))
         {
+            GameManager.Instance.invContainer.Remove(CoffeeBeans, 1);
             ct.ResetSlider();
             a.SetActive(!a.activeSelf);
             if (a.activeInHierarchy && !isCreating) 
@@ -50,35 +58,69 @@ public class StartCreating : MonoBehaviour
                 CreateNewCoffee();
             }
         }
+        else
+        {
+            Debug.Log("You don't have beans");
+        }
+    }
+
+    bool CheckItemInInv(Item item)
+    {
+        if(GameManager.Instance.invContainer.HasItem(item.Name))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     void CreateNewCoffee()
     {
         currentCoffee = ScriptableObject.CreateInstance<CoffeeItem>();
-        currentCoffee.Name = "Latte";
+
+        currentCoffee.Name = "Coffee";
         currentCoffee.stackable = false;
         currentCoffee.icon = icon;
         currentCoffee.sugarSpoons = 0;
         currentCoffee.milk = false;
-
     }
 
     public void AddMilk()
     {
-        currentCoffee.milk = true;
-        Debug.Log("Milk added to the coffee.");
+        if (CheckItemInInv(Milk))
+        {
+            currentCoffee.milk = true;
+            Debug.Log("Milk added");
+            GameManager.Instance.invContainer.Remove(Milk, 1);
+        }
+        else
+        {
+            Debug.Log("Don't have milk");
+        }
+        
     }
 
     public void AddSugar()
     {
-        currentCoffee.sugarSpoons++;
-        Debug.Log($"Sugar added. Total spoons: {currentCoffee.sugarSpoons}");
+        if (CheckItemInInv(Sugar))
+        {
+            currentCoffee.sugarSpoons++;
+            Debug.Log($"Sugar added, total: {currentCoffee.sugarSpoons}");
+            GameManager.Instance.invContainer.Remove(Sugar, 1);
+        }
+        else
+        {
+            Debug.Log("Don't have sugar");
+        }
+
     }
 
     public void TrashItem()
     {
         currentCoffee = null;
-        Debug.Log("Coffee item trashed.");
+        Debug.Log("Coffee trashed.");
         CreateNewCoffee();
     }
 
@@ -103,12 +145,12 @@ public class StartCreating : MonoBehaviour
         isCreating = false;
         if (currentCoffee == null)
         {
-            Debug.Log("No coffee item to add to inventory.");
+            Debug.Log("No coffee");
             return;
         }
 
         playerInventory.Add(currentCoffee, 1);
-        Debug.Log("Coffee item added to inventory.");
+        Debug.Log("Coffee added to inventory");
         pickUpBtn.enabled = false;
         a.SetActive(false);
     }

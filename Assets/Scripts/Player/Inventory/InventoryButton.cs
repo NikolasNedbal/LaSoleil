@@ -45,20 +45,17 @@ public class InventoryButton : MonoBehaviour, IPointerClickHandler
     {
         if (button1.item == null || button2.item == null)
         {
-            Debug.LogWarning("Cannot swap with an empty slot.");
+            Debug.Log("Cant swap empty slot");
             return;
         }
 
-        // Temporary item slot to hold the item from button1
         ItemSlot tempSlot = new ItemSlot();
         tempSlot.item = button1.item;
         tempSlot.count = button1.indx >= 0 ? GameManager.Instance.invContainer.slots[button1.indx].count : 0;
 
-        // Swap logic for the item slots
         GameManager.Instance.invContainer.slots[button1.indx].item = button2.item;
         GameManager.Instance.invContainer.slots[button2.indx].item = tempSlot.item;
 
-        // Refresh UI after swap
         button1.Set(GameManager.Instance.invContainer.slots[button1.indx]);
         button2.Set(GameManager.Instance.invContainer.slots[button2.indx]);
     }
@@ -72,41 +69,36 @@ public class InventoryButton : MonoBehaviour, IPointerClickHandler
 
     public void MoveToAnotherContainer(ItemContainer fromContainer, ItemContainer toContainer, int fromIndex, int toIndex)
     {
-        ItemSlot sourceSlot = fromContainer.slots[fromIndex];
-        ItemSlot targetSlot = toContainer.slots[toIndex];
-
-        // Prevent moving if both slots are the same
+        ItemSlot firstSlot = fromContainer.slots[fromIndex];
+        ItemSlot secondSlot = toContainer.slots[toIndex];
         if (fromContainer == toContainer && fromIndex == toIndex)
             return;
 
-        if (sourceSlot.item == null) return; // Nothing to move
+        if (firstSlot.item == null) return;
 
-        // If target slot is empty, move the item
-        if (targetSlot.item == null)
+        if (secondSlot.item == null)
         {
-            targetSlot.item = sourceSlot.item;
-            targetSlot.count = sourceSlot.count;
-            sourceSlot.item = null;
-            sourceSlot.count = 0;
+            secondSlot.item = firstSlot.item;
+            secondSlot.count = firstSlot.count;
+            firstSlot.item = null;
+            firstSlot.count = 0;
         }
-        // If target slot has the same item and is stackable, combine them
-        else if (targetSlot.item == sourceSlot.item && targetSlot.item.stackable)
+        else if (secondSlot.item == firstSlot.item && secondSlot.item.stackable)
         {
-            targetSlot.count += sourceSlot.count;
-            sourceSlot.item = null;
-            sourceSlot.count = 0;
+            secondSlot.count += firstSlot.count;
+            firstSlot.item = null;
+            firstSlot.count = 0;
         }
-        // If target slot has a different item, swap the slots
         else
         {
-            Item tempItem = targetSlot.item;
-            int tempCount = targetSlot.count;
+            Item tempItem = secondSlot.item;
+            int tempCount = secondSlot.count;
 
-            targetSlot.item = sourceSlot.item;
-            targetSlot.count = sourceSlot.count;
+            secondSlot.item = firstSlot.item;
+            secondSlot.count = firstSlot.count;
 
-            sourceSlot.item = tempItem;
-            sourceSlot.count = tempCount;
+            firstSlot.item = tempItem;
+            firstSlot.count = tempCount;
         }
         GameManager.Instance.invPanel.Show();
         GameManager.Instance.storagePanel.Show();
@@ -138,67 +130,108 @@ public class InventoryButton : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            // Clear the button visuals for empty slots
             icon.sprite = null;
             icon.gameObject.SetActive(false);
             txt.gameObject.SetActive(false);
-            item = null; // Also clear item reference
+            item = null;
         }
     }
 
-    public void OnRightClick()
+    /*public void OnRightClick()
     {
         if (selectedButton == null)
         {
-            selectedButton = this; // Select the first button
-            Debug.Log($"Selected button index: {selectedButton.indx}");
+            selectedButton = this;
         }
         else
         {
-            Debug.Log($"Target button index: {this.indx}");
-
-            // Determine which containers the buttons belong to
             ItemContainer container = null;
-
-            // Check if both buttons are part of the player's inventory
             if (GameManager.Instance.invPanel.buttons.Contains(selectedButton) &&
                 GameManager.Instance.invPanel.buttons.Contains(this))
             {
-                container = GameManager.Instance.invContainer; // Same container for inventory
+                container = GameManager.Instance.invContainer;
             }
-
-            // Swap within the same container
             if (container != null)
             {
                 container.SwapItems(selectedButton.indx, this.indx);
-
-                // Refresh the inventory UI
                 GameManager.Instance.invPanel.Show();
             }
             else
             {
-                // Handle moving between containers (Inventory <-> Storage)
                 ItemContainer fromContainer, toContainer;
                 int fromIndex = selectedButton.indx;
                 int toIndex = this.indx;
 
                 if (GameManager.Instance.invPanel.buttons.Contains(selectedButton))
                 {
-                    fromContainer = GameManager.Instance.invContainer; // Inventory → Storage
+                    fromContainer = GameManager.Instance.invContainer;
                     toContainer = GameManager.Instance.storageContainer;
                 }
                 else
                 {
-                    fromContainer = GameManager.Instance.storageContainer; // Storage → Inventory
+                    fromContainer = GameManager.Instance.storageContainer;
                     toContainer = GameManager.Instance.invContainer;
                 }
-
-                // Move items between different containers
                 MoveToAnotherContainer(fromContainer, toContainer, fromIndex, toIndex);
             }
-
-            // Clear selected button
             selectedButton = null;
         }
+    }*/
+
+    public void OnRightClick()
+    {
+        if (selectedButton == null)
+        {
+            selectedButton = this;
+        }
+        else
+        {
+            bool selectedInInv = GameManager.Instance.invPanel.buttons.Contains(selectedButton);
+            bool selectedInStorage = GameManager.Instance.storagePanel.buttons.Contains(selectedButton);
+            bool selectedInFer = GameManager.Instance.ferPanel.buttons.Contains(selectedButton);
+
+            bool thisInInv = GameManager.Instance.invPanel.buttons.Contains(this);
+            bool thisInStorage = GameManager.Instance.storagePanel.buttons.Contains(this);
+            bool thisInFer = GameManager.Instance.ferPanel.buttons.Contains(this);
+
+            ItemContainer fromContainer = null, toContainer = null;
+            int fromIndex = selectedButton.indx;
+            int toIndex = this.indx;
+
+            // Case 1: Swap within inventory (Allowed)
+            if (selectedInInv && thisInInv)
+            {
+                GameManager.Instance.invContainer.SwapItems(fromIndex, toIndex);
+            }
+            // Case 2: Move between inventory and storage (Allowed)
+            else if ((selectedInInv && thisInStorage) || (selectedInStorage && thisInInv))
+            {
+                fromContainer = selectedInInv ? GameManager.Instance.invContainer : GameManager.Instance.storageContainer;
+                toContainer = selectedInStorage ? GameManager.Instance.invContainer : GameManager.Instance.storageContainer;
+                MoveToAnotherContainer(fromContainer, toContainer, fromIndex, toIndex);
+            }
+            // Case 3: Move between inventory and ferContainer (Allowed)
+            else if ((selectedInInv && thisInFer) || (selectedInFer && thisInInv))
+            {
+                fromContainer = selectedInInv ? GameManager.Instance.invContainer : GameManager.Instance.ferContainer;
+                toContainer = selectedInFer ? GameManager.Instance.invContainer : GameManager.Instance.ferContainer;
+                MoveToAnotherContainer(fromContainer, toContainer, fromIndex, toIndex);
+            }
+            // Case 4: Prevent swapping within storage or ferContainer (Not Allowed)
+            else
+            {
+                Debug.Log("Swapping between storage slots or within ferContainer is not allowed.");
+            }
+
+            RefreshUI();
+            selectedButton = null;
+        }
+    }
+
+    private void RefreshUI()
+    {
+        GameManager.Instance.invPanel.Show();
+        GameManager.Instance.storagePanel.Show();
+        GameManager.Instance.ferPanel.Show();
     }
 }

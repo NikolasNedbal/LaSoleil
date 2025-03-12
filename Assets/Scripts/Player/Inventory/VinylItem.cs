@@ -4,4 +4,6 @@ using UnityEngine;
 public class VinylItem : Item
 {
     public AudioClip track;
+    public Sprite vinylPic;
+    public string animBool;
 }

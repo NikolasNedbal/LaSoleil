@@ -6,6 +6,7 @@ public class StorageEntry : MonoBehaviour
     private bool playerActive = false;
     public GameObject canvas;
 
+    [SerializeField] Canvas invPanel;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,6 +19,7 @@ public class StorageEntry : MonoBehaviour
     {
         if (playerActive && Input.GetKeyUp(KeyCode.F))
         {
+            invPanel.gameObject.SetActive(true);
             canvas.SetActive(!canvas.activeSelf);
         }
     }

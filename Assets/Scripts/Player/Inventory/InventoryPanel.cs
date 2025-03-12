@@ -11,6 +11,9 @@ public class InventoryPanel : MonoBehaviour
     [SerializeField]
     private bool isStorage = false;
 
+    [SerializeField]
+    private bool isFer = false;
+
     void Start()
     {
         Show();
@@ -25,6 +28,10 @@ public class InventoryPanel : MonoBehaviour
             if (isStorage)
             {
                 inv = GameManager.Instance.storageContainer;
+            }
+            else if (isFer)
+            {
+                inv = GameManager.Instance.ferContainer;
             }
             else
             {
@@ -50,7 +57,6 @@ public class InventoryPanel : MonoBehaviour
     {
         for (int i = 0; i < buttons.Count; i++)
         {
-            // Reset and update button states
             buttons[i].ThrashIsntDoneWithYou();
             buttons[i].Set(inv.slots[i]);
         }

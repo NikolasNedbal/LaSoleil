@@ -12,10 +12,13 @@ public class BgMusic : MonoBehaviour
 
     private bool playerActive = false;
 
+    public Image vinylPictur;
+
+    public Animator anim;
+
     private ItemContainer playerInv;
     private void Start()
     {
-
         playerInv = GameManager.Instance.invContainer;
 
         if (audioSource == null)
@@ -23,7 +26,7 @@ public class BgMusic : MonoBehaviour
             audioSource = GetComponent<AudioSource>();
             if (audioSource == null)
             {
-                Debug.Log("AudioSource is not assigned and no AudioSource component is found on this GameObject.");
+                Debug.Log("nema");
             }
         }
     }
@@ -39,10 +42,9 @@ public class BgMusic : MonoBehaviour
         {
             songName.text = currentVinyl.track.name;
             PlayVinyl(currentVinyl);
-        }
-        else
-        {
-            Debug.Log("Vinyl / track is null");
+
+            vinylPictur.sprite = currentVinyl.vinylPic;
+            anim.SetBool(currentVinyl.animBool, true);
         }
     }
 
@@ -55,11 +57,8 @@ public class BgMusic : MonoBehaviour
 
             audioSource.clip = currentVinyl.track;
             audioSource.Play();
-            Debug.Log("Now playing: " + currentVinyl.Name);
-        }
-        else
-        {
-            Debug.Log("AudioSource not assigned");
+
+            anim.SetBool(currentVinyl.animBool, true);
         }
     }
 
@@ -72,6 +71,20 @@ public class BgMusic : MonoBehaviour
         }
     }
 
+    public void PlayAnim()
+    {
+        anim.enabled = true;
+        anim.SetBool(currentVinyl.animBool, true);
+    }
+
+    public void StopVinyl()
+    {
+        anim.SetBool(currentVinyl.animBool, false);
+        anim.enabled = false;
+
+        vinylPictur.sprite = currentVinyl.vinylPic;
+    }
+
     private VinylItem FindVinyl()
     {
         VinylItem foundVinyl = null;
@@ -79,7 +92,6 @@ public class BgMusic : MonoBehaviour
         {
             if (slot.item != null)
             {
-                Debug.Log("Item type: " + slot.item.GetType().Name);
                 if (slot.item is VinylItem vinyl && vinyl.track != null)
                 {
                     foundVinyl = vinyl;
