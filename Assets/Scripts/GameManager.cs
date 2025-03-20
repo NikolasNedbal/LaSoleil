@@ -13,9 +13,19 @@ public class GameManager : MonoBehaviour
 
     public int money;
 
+    public int days;
+    public int weeks;
+
+    public int rent;
+
     public List<Plant> plants;
 
     public List<CoffeeItem> menuItems = new List<CoffeeItem>();
+    public Table[] tables;
+    public Transform cashRegister;
+
+    public Transform SpawnPoint;
+    public GameObject customer;
 
     public bool isCafeOpen;
 
@@ -23,23 +33,14 @@ public class GameManager : MonoBehaviour
     public ItemContainer invContainer;
     public ItemContainer storageContainer;
     public ItemContainer ferContainer;
+    public ItemContainer grContainer;
 
     public InventoryPanel invPanel;
     public InventoryPanel storagePanel;
     public InventoryPanel ferPanel;
-
-    public Table[] tables;
-    public Transform cashRegister;
-
-    public Transform SpawnPoint;
-    public GameObject customer;
+    public InventoryPanel grPanel;
 
     public Canvas ui;
-
-    public int days;
-    public int weeks;
-
-    public int rent;
 
     public GameObject[] doorPoints;
 

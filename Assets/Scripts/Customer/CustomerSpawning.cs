@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CustomerSpawning : MonoBehaviour
 {
-    private float cooldown = 5f;
-    private int maxCustomers = 12;
+    private float cooldown = 6.5f;
+    private int maxCustomers = 4;
     private int curCustomers;
     //[SerializeField]
     private Transform spawnPoint;
@@ -14,10 +14,13 @@ public class CustomerSpawning : MonoBehaviour
 
     private bool canSpawnCustomers = false;
 
+    private DayNight dn;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private void Awake()
     {
+        dn = GameManager.Instance.gameObject.GetComponent<DayNight>();
         customer = GameManager.Instance.customer;
         spawnPoint = GameManager.Instance.SpawnPoint;
     }
@@ -45,7 +48,7 @@ public class CustomerSpawning : MonoBehaviour
 
     private void SpawnCustomer()
     {
-        if (canSpawnCustomers)
+        if (canSpawnCustomers && dn.time > 21600 && dn.time < 79200)
         {
             if (curCustomers < maxCustomers)
             {
@@ -61,5 +64,11 @@ public class CustomerSpawning : MonoBehaviour
         {
             Debug.Log("Cafe is not open");
         }
+    }
+
+    public void RemoveCustomer()
+    {
+        Debug.Log("AEFJIOFOAIEJFOI");
+        curCustomers--;
     }
 }

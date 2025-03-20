@@ -19,7 +19,12 @@ public class DayNight : MonoBehaviour
 
     [SerializeField] AnimationCurve dayNightCycle;
     float timeScale = 110.77f;
-    float time;
+    public float time { get; private set; }
+
+    private void Start()
+    {
+        SkipHour(5.5f);
+    }
     private void Update()
     {
         time += Time.deltaTime * timeScale;
@@ -33,7 +38,7 @@ public class DayNight : MonoBehaviour
         }
     }
 
-    public void SkipHour(int numberOfHours)
+    public void SkipHour(float numberOfHours)
     {
         time += (3600f * numberOfHours);
 
@@ -42,6 +47,13 @@ public class DayNight : MonoBehaviour
             time -= secondsInDay;
             NewDay();
         }
+    }
+
+    public void SetHour(float hour)
+    {
+        float hourToSet = hour * 3600;
+
+        time = hourToSet;
     }
 
     public void NewDay()
@@ -66,8 +78,17 @@ public class DayNight : MonoBehaviour
 
     public void Rent()
     {
+        GameManager.Instance.money -= GameManager.Instance.rent;
         GameManager.Instance.rent = (150 * GameManager.Instance.weeks);
         Debug.Log("RENT: " + GameManager.Instance.rent);
-        GameManager.Instance.money -= GameManager.Instance.rent;
+        if(GameManager.Instance.money < -150)
+        {
+            EndGame();
+        }
+    }
+
+    private void EndGame()
+    {
+        Application.Quit();
     }
 }

@@ -16,7 +16,15 @@ public class Sleep : MonoBehaviour
     {
         if(playerActive && dn != null && Input.GetKeyDown(KeyCode.F))
         {
-            dn.NewDay();
+            if(dn.time > 0 && dn.time <= 21600)
+            {
+                dn.SetHour(6);
+            }
+            else if(dn.time > 21600 && dn.time <= 86400)
+            {
+                dn.NewDay();
+                dn.SkipHour(6f);
+            }
         }
     }
 

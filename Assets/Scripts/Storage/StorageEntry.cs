@@ -37,6 +37,7 @@ public class StorageEntry : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             playerActive = false;
+            canvas.gameObject.SetActive(false);
         }
     }
 }

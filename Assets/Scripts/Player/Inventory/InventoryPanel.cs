@@ -14,6 +14,8 @@ public class InventoryPanel : MonoBehaviour
     [SerializeField]
     private bool isFer = false;
 
+    [SerializeField]
+    private bool isGramophone = false;
     void Start()
     {
         Show();
@@ -33,7 +35,11 @@ public class InventoryPanel : MonoBehaviour
             {
                 inv = GameManager.Instance.ferContainer;
             }
-            else
+            else if (isGramophone)
+            {
+                inv = GameManager.Instance.grContainer;
+            }
+            else 
             {
                 inv = GameManager.Instance.invContainer;
             }

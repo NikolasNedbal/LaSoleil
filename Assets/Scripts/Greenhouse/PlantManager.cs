@@ -12,7 +12,7 @@ public class PlantManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             PlantOnPlayerTile();
         }

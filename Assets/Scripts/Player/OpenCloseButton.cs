@@ -35,4 +35,14 @@ public class OpenCloseButton : MonoBehaviour
             Debug.Log("Cafe is closed");
         }
     }
+
+    public void EndOfTheDay()
+    {
+        if (GameManager.Instance.isCafeOpen)
+        {
+            GameManager.Instance.isCafeOpen = false;
+            btnTxt.text = "Open";
+            Debug.Log("End of the day = Closed");
+        }  
+    }
 }

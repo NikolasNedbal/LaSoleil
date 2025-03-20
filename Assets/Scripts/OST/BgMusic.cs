@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class BgMusic : MonoBehaviour
 {
@@ -11,54 +12,54 @@ public class BgMusic : MonoBehaviour
     private VinylItem currentVinyl;
 
     private bool playerActive = false;
-
-    public Image vinylPictur;
-
-    public Animator anim;
+    private ItemContainer gramophoneContainer;
 
     private ItemContainer playerInv;
+    [SerializeField]
+    private Canvas invPanel;
     private void Start()
     {
-        playerInv = GameManager.Instance.invContainer;
+        gramophoneContainer = GameManager.Instance.grContainer;
 
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
             if (audioSource == null)
             {
-                Debug.Log("nema");
+                Debug.LogError("AudioSource component is missing.");
             }
         }
     }
-    public void InsertVinyl()
+    private VinylItem GetCurrentVinyl()
     {
-        VinylItem foundVinyl = FindVinyl();
-        if (foundVinyl != null)
+        ItemSlot slot = gramophoneContainer.slots.Find(s => s.item is VinylItem);
+        Debug.Log(slot.item.name);
+        return slot?.item as VinylItem;
+    }
+
+    public void Play()
+    {
+        VinylItem vinyl = GetCurrentVinyl();
+
+        if (vinyl != null && vinyl.track != null)
         {
-            currentVinyl = foundVinyl;
+            Debug.Log("PLAY");
+            audioSource.clip = vinyl.track;
+            audioSource.Play();
+
+            songName.text = vinyl.track.name;
         }
-
-        if (currentVinyl != null && currentVinyl.track != null)
+        else
         {
-            songName.text = currentVinyl.track.name;
-            PlayVinyl(currentVinyl);
-
-            vinylPictur.sprite = currentVinyl.vinylPic;
-            anim.SetBool(currentVinyl.animBool, true);
+            Debug.Log("No valid vinyl in the Gramophone slot.");
         }
     }
 
-    public void PlayVinyl(VinylItem vinyl)
+    public void Stop()
     {
-        if (audioSource != null)
+        if (audioSource.isPlaying)
         {
-            if (audioSource.isPlaying)
-                audioSource.Stop();
-
-            audioSource.clip = currentVinyl.track;
-            audioSource.Play();
-
-            anim.SetBool(currentVinyl.animBool, true);
+            audioSource.Stop();
         }
     }
 
@@ -66,42 +67,9 @@ public class BgMusic : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.F) && playerActive) 
         {
-            uiGramophone.SetActive(!uiGramophone.activeSelf);
-            
+            invPanel.gameObject.SetActive(true);
+            uiGramophone.SetActive(!uiGramophone.activeSelf);   
         }
-    }
-
-    public void PlayAnim()
-    {
-        anim.enabled = true;
-        anim.SetBool(currentVinyl.animBool, true);
-    }
-
-    public void StopVinyl()
-    {
-        anim.SetBool(currentVinyl.animBool, false);
-        anim.enabled = false;
-
-        vinylPictur.sprite = currentVinyl.vinylPic;
-    }
-
-    private VinylItem FindVinyl()
-    {
-        VinylItem foundVinyl = null;
-        ItemSlot itemSlot = playerInv.slots.Find(slot =>
-        {
-            if (slot.item != null)
-            {
-                if (slot.item is VinylItem vinyl && vinyl.track != null)
-                {
-                    foundVinyl = vinyl;
-                    return true;
-                }
-            }
-            return false;
-        });
-
-        return foundVinyl;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -117,6 +85,7 @@ public class BgMusic : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             playerActive = false;
+            uiGramophone.gameObject.SetActive(false);
         }
     }
 }

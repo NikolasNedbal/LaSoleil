@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Coffee Beans
   stackable: 1
-  icon: {fileID: -8465034736420964039, guid: 8fbb390c6fa88b24989dc1d8d5ee3e35, type: 3}
+  icon: {fileID: -1603291472181913768, guid: 7b388025886ef1a45822719c1b95cbdf, type: 3}
   price: 25

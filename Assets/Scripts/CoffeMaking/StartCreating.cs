@@ -114,7 +114,6 @@ public class StartCreating : MonoBehaviour
         {
             Debug.Log("Don't have sugar");
         }
-
     }
 
     public void TrashItem()
@@ -198,6 +197,7 @@ public class StartCreating : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             playerActive = false;
+            a.gameObject.SetActive(false);
         }
     }
 }

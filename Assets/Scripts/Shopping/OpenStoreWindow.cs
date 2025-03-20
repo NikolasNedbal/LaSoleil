@@ -33,6 +33,7 @@ public class OpenStoreWindow : MonoBehaviour
         if(collision.tag == "Player")
         {
             playerActive = false;
+            storeUi.gameObject.SetActive(false);
         }
     }
 }

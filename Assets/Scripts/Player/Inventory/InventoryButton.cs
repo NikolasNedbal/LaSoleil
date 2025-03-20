@@ -137,47 +137,6 @@ public class InventoryButton : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    /*public void OnRightClick()
-    {
-        if (selectedButton == null)
-        {
-            selectedButton = this;
-        }
-        else
-        {
-            ItemContainer container = null;
-            if (GameManager.Instance.invPanel.buttons.Contains(selectedButton) &&
-                GameManager.Instance.invPanel.buttons.Contains(this))
-            {
-                container = GameManager.Instance.invContainer;
-            }
-            if (container != null)
-            {
-                container.SwapItems(selectedButton.indx, this.indx);
-                GameManager.Instance.invPanel.Show();
-            }
-            else
-            {
-                ItemContainer fromContainer, toContainer;
-                int fromIndex = selectedButton.indx;
-                int toIndex = this.indx;
-
-                if (GameManager.Instance.invPanel.buttons.Contains(selectedButton))
-                {
-                    fromContainer = GameManager.Instance.invContainer;
-                    toContainer = GameManager.Instance.storageContainer;
-                }
-                else
-                {
-                    fromContainer = GameManager.Instance.storageContainer;
-                    toContainer = GameManager.Instance.invContainer;
-                }
-                MoveToAnotherContainer(fromContainer, toContainer, fromIndex, toIndex);
-            }
-            selectedButton = null;
-        }
-    }*/
-
     public void OnRightClick()
     {
         if (selectedButton == null)
@@ -189,38 +148,42 @@ public class InventoryButton : MonoBehaviour, IPointerClickHandler
             bool selectedInInv = GameManager.Instance.invPanel.buttons.Contains(selectedButton);
             bool selectedInStorage = GameManager.Instance.storagePanel.buttons.Contains(selectedButton);
             bool selectedInFer = GameManager.Instance.ferPanel.buttons.Contains(selectedButton);
+            bool selectedInGramophone = GameManager.Instance.grPanel.buttons.Contains(selectedButton);
 
             bool thisInInv = GameManager.Instance.invPanel.buttons.Contains(this);
             bool thisInStorage = GameManager.Instance.storagePanel.buttons.Contains(this);
             bool thisInFer = GameManager.Instance.ferPanel.buttons.Contains(this);
+            bool thisInGramophone = GameManager.Instance.grPanel.buttons.Contains(this);
 
             ItemContainer fromContainer = null, toContainer = null;
             int fromIndex = selectedButton.indx;
             int toIndex = this.indx;
 
-            // Case 1: Swap within inventory (Allowed)
             if (selectedInInv && thisInInv)
             {
                 GameManager.Instance.invContainer.SwapItems(fromIndex, toIndex);
             }
-            // Case 2: Move between inventory and storage (Allowed)
             else if ((selectedInInv && thisInStorage) || (selectedInStorage && thisInInv))
             {
                 fromContainer = selectedInInv ? GameManager.Instance.invContainer : GameManager.Instance.storageContainer;
                 toContainer = selectedInStorage ? GameManager.Instance.invContainer : GameManager.Instance.storageContainer;
                 MoveToAnotherContainer(fromContainer, toContainer, fromIndex, toIndex);
             }
-            // Case 3: Move between inventory and ferContainer (Allowed)
             else if ((selectedInInv && thisInFer) || (selectedInFer && thisInInv))
             {
                 fromContainer = selectedInInv ? GameManager.Instance.invContainer : GameManager.Instance.ferContainer;
                 toContainer = selectedInFer ? GameManager.Instance.invContainer : GameManager.Instance.ferContainer;
                 MoveToAnotherContainer(fromContainer, toContainer, fromIndex, toIndex);
             }
-            // Case 4: Prevent swapping within storage or ferContainer (Not Allowed)
+            else if ((selectedInInv && thisInGramophone) || (selectedInGramophone && thisInInv))
+            {
+                fromContainer = selectedInInv ? GameManager.Instance.invContainer : GameManager.Instance.grContainer;
+                toContainer = selectedInGramophone ? GameManager.Instance.invContainer : GameManager.Instance.grContainer;
+                MoveToAnotherContainer(fromContainer, toContainer, fromIndex, toIndex);
+            }
             else
             {
-                Debug.Log("Swapping between storage slots or within ferContainer is not allowed.");
+                Debug.Log("nn");
             }
 
             RefreshUI();
@@ -233,5 +196,6 @@ public class InventoryButton : MonoBehaviour, IPointerClickHandler
         GameManager.Instance.invPanel.Show();
         GameManager.Instance.storagePanel.Show();
         GameManager.Instance.ferPanel.Show();
+        GameManager.Instance.grPanel.Show();
     }
 }

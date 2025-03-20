@@ -33,7 +33,16 @@ public class DialogueController : MonoBehaviour
     {
         if (customer != null) 
         {
-            dialogue = ("Good day, I'd like to order " + customer.customerPreferences[0].Name + " Sugar: " + customer.customerPreferences[0].sugarSpoons + " Milk: " + customer.customerPreferences[0].milk);
+            string milkos;
+            if (customer.customerPreferences[0].milk == true)
+            {
+                milkos = "With milk";
+            }
+            else
+            {
+                milkos = "Without milk";
+            }
+            dialogue = ("Good day, I'd like to order " + customer.customerPreferences[0].Name + " Sugar spoons: " + customer.customerPreferences[0].sugarSpoons + " " + milkos);
             dialogueText.text = dialogue;
             acceptButton.gameObject.SetActive(true);
             declineButton.gameObject.SetActive(true);

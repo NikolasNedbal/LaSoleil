@@ -15,4 +15,4 @@ MonoBehaviour:
   Name: plantSeed
   stackable: 1
   icon: {fileID: -550009761806675047, guid: 9bb7d89930dcd714eafd8c7543afa1ad, type: 3}
-  price: 25
+  price: 5

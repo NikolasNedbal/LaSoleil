@@ -5,9 +5,12 @@ using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Customer : MonoBehaviour
 {
+    [SerializeField] private Slider slider;
+
     private NavMeshAgent agent;
     private Chair chairToSit;
 
@@ -29,24 +32,47 @@ public class Customer : MonoBehaviour
     private bool wasAccepted = false;
     private bool hasSpoken = false;
 
+    private bool konec = false;
+
 
     [SerializeField] private float timeLimit = 300f;
 
     private ItemContainer playerInv;
 
+    private SpriteRenderer customerSprite;
+
+    private BoxCollider2D boxCollider;
+
     // Start is called before the first frame update
     void Start()
     {
+        boxCollider = GameManager.Instance.cashRegister.GetComponent<BoxCollider2D>();
+        customerSprite = GetComponent<SpriteRenderer>();
         playerInv = GameManager.Instance.invContainer;
         GenerateCustomPreferences();
         agent = GetComponent<NavMeshAgent>();
         agent.updateUpAxis = false; //NEMAZAT jinak zmizí sprite
         GoToCashRegister();
+
+        if (slider != null)
+        {
+            slider.maxValue = timeLimit;
+            slider.value = timeLimit;
+            slider.gameObject.SetActive(false);
+        }
     }
 
     private void GoToCashRegister()
     {
-        agent.SetDestination(GameManager.Instance.cashRegister.position);
+        Vector2 colliderCenter = boxCollider.bounds.center;
+        Vector2 colliderSize = boxCollider.bounds.size;
+
+        float randomX = UnityEngine.Random.Range(colliderCenter.x - colliderSize.x / 2, colliderCenter.x + colliderSize.x / 2);
+        float randomY = UnityEngine.Random.Range(colliderCenter.y - colliderSize.y / 2, colliderCenter.y + colliderSize.y / 2);
+
+        Vector3 targetPosition = new Vector3(randomX, randomY, agent.transform.position.z);
+
+        agent.SetDestination(targetPosition);
     }
 
     public void GenerateCustomPreferences()
@@ -96,6 +122,12 @@ public class Customer : MonoBehaviour
             GoToTable();
             isSitting = true;
             isTimerRunning = true;
+
+            if (slider != null)
+            {
+                slider.gameObject.SetActive(true); // Show the slider when the timer starts
+            }
+
             //GameManager.Instance.dialogue.customer = null;
             dialoguePanel.GetComponent<DialogueController>().customer = null;
         }
@@ -110,15 +142,31 @@ public class Customer : MonoBehaviour
             orderTimer += Time.deltaTime;
         }
 
+        if (slider != null)
+        {
+            slider.value = timeLimit - orderTimer;
+        }
+
         if (orderTimer >= timeLimit) 
         {
             isTimerRunning = false;
+            StartCoroutine(ExitCafe());
+        }
+
+        if(GameManager.Instance.gameObject.GetComponent<DayNight>().time >= 79200)
+        {
             StartCoroutine(ExitCafe());
         }
     }
 
     private IEnumerator ExitCafe()
     {
+        if (!konec)
+        {
+            GameManager.Instance.gameObject.GetComponent<CustomerSpawning>().RemoveCustomer();
+            konec = true;
+        }
+        
         GetPayed();
         agent.SetDestination(GameManager.Instance.SpawnPoint.transform.position);
         yield return new WaitForSeconds(6f);
@@ -160,7 +208,7 @@ public class Customer : MonoBehaviour
 
     Chair GetAvailableChair()
     {
-        foreach (Table table in GameManager.Instance.tables) 
+        /*foreach (Table table in GameManager.Instance.tables) 
         {
             Chair availableChair = table.GetAvailableChair();
             if(availableChair != null)
@@ -168,6 +216,15 @@ public class Customer : MonoBehaviour
                 return availableChair;
             }
         }
+        return null;*/
+
+        int randomTable = UnityEngine.Random.Range(0,7);
+        Chair availableChair = GameManager.Instance.tables[randomTable].GetAvailableChair();
+        if (availableChair != null)
+        {
+            return availableChair;
+        }
+
         return null;
     }
 
@@ -197,18 +254,30 @@ public class Customer : MonoBehaviour
         {
             if (!HasRequiredItems(preferredItem))
             {
+                StartCoroutine(ChangeColor(Color.red));
                 Debug.Log("Order cannot be finished");
                 return false;
             }
         }
         foreach (var preferredItem in customerPreferences)
         {
+            
             wasServed = true;
             RemoveItemFromInventory(preferredItem);
+            StartCoroutine(ChangeColor(Color.green));
         }
+
+        
 
         Debug.Log("Order finished successfully!");
         return true;
+    }
+
+    private IEnumerator ChangeColor(Color colorToChangeTo)
+    {
+        customerSprite.color = colorToChangeTo;
+        yield return new WaitForSeconds(0.5f);
+        customerSprite.color = Color.white;
     }
 
     private bool HasRequiredItems(CoffeeItem preferredItem)
